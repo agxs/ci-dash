@@ -1,0 +1,5 @@
+<a [href]="(project.pipeline | async)?.web_url" target="_ci">
+  <div class="project" [ngClass]="(project.pipeline | async)?.status">
+    {{ project.name }} - {{ (project.pipeline | async)?.status }}
+  </div>
+</a>

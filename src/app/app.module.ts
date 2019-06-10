@@ -3,16 +3,21 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CiService } from "./ci.service";
+import { HttpClientModule } from "@angular/common/http";
+import { ProjectComponent } from "./project.component";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ProjectComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [CiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
