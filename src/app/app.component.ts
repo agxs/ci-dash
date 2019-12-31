@@ -21,6 +21,13 @@ export class AppComponent implements OnInit {
 
       projects.forEach(project => {
         project.pipeline$ = this.ci.pipeline(project.id);
+
+        project.pipeline$.subscribe(p => {
+          if (!p) {
+            return;
+          }
+          project.commit$ = this.ci.commit(project.id, p.sha);
+        });
       })
     });
   }

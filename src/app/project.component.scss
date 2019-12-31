@@ -59,3 +59,12 @@ main {
     background-color: rgb(255, 246, 245);
   }
 }
+
+.commit-msg {
+  font-size: .8em;
+  padding-left: 2em;
+  max-width: 15em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

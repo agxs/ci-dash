@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { concat, Observable } from "rxjs";
-import { Project, Pipeline } from "./gitlab";
+import { Project, Pipeline, Commit } from "./gitlab";
 import { map, mergeMap, publishReplay, reduce, refCount } from "rxjs/operators";
 
 @Injectable()
@@ -52,6 +52,11 @@ export class CiService {
     }
 
     return this.pipelines$[projectId];
+  }
+
+  commit(projectId: number, commit: string): Observable<Commit | undefined> {
+    return this.http.get<Commit>(`${this.API_GITLAB}/projects/${projectId}/repository/commits/${commit}`,
+      {headers: this.HEADERS});
   }
 
 //  async projects() {

@@ -5,6 +5,7 @@ export interface Project {
   name: string;
   description: string;
   pipeline$: Observable<Pipeline | undefined>;
+  commit$: Observable<Commit | undefined>;
   name_with_namespace: string;
   path: string;
   path_with_namespace: string;
@@ -25,4 +26,26 @@ export interface Pipeline {
   ref: string;
   status: string;
   web_url: string;
+}
+
+export interface Commit {
+  id: string;
+  short_id: string;
+  title: string;
+  author_name: string;
+  author_email: string;
+  committer_name: string;
+  committer_email: string;
+  created_at: Date;
+  message: string;
+  committed_date: Date;
+  authored_date: Date;
+  parent_ids: string[];
+  last_pipeline: Pipeline,
+  stats: {
+    additions: number;
+    deletions: number;
+    total: number;
+  },
+  status: string;
 }
