@@ -7,5 +7,5 @@ import { Pipeline, Project } from "./gitlab";
   styleUrls: ['./project.component.scss'],
 })
 export class ProjectComponent {
-  @Input() project: Project;
+  @Input() project: Project | undefined;
 }

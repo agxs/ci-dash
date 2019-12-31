@@ -10,7 +10,7 @@ import { Project } from "./gitlab";
 export class AppComponent implements OnInit {
   title = 'ci-dash';
 
-  projects: Project[];
+  projects: Project[] = [];
 
   constructor(private ci: CiService) {}
 

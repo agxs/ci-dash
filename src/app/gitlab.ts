@@ -4,7 +4,7 @@ export interface Project {
   id: number;
   name: string;
   description: string;
-  pipeline: Observable<Pipeline | null>;
+  pipeline: Observable<Pipeline | undefined>;
 }
 
 export interface Pipeline {

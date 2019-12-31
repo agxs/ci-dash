@@ -14,9 +14,9 @@ export class CiService {
   readonly HEADERS = new HttpHeaders({ 'Private-Token': this.API_TOKEN });
 
   // caches
-  private projects$: Observable<Project[]> | null = null;
+  private projects$: Observable<Project[]> | undefined = undefined;
   private pipelines$: {
-    [id: number]: Observable<Pipeline | null>;
+    [id: number]: Observable<Pipeline | undefined>;
   } = {};
 
   constructor(private http: HttpClient) {}
@@ -27,7 +27,7 @@ export class CiService {
         const url = this.API_PROJECTS.replace(':id', id.toString());
         return this.http.get<Project[]>(url, {headers: this.HEADERS})
       });
-      this.projects$ = concat(...projects).pipe(reduce((a, v) => {
+      this.projects$ = concat(...projects).pipe(reduce<Project[]>((a, v) => {
         a.push(...v);
         return a;
       }, []), publishReplay(1), refCount());
@@ -36,7 +36,7 @@ export class CiService {
     return this.projects$;
   }
 
-  pipelines(): Observable<Pipeline | null> {
+  pipelines(): Observable<Pipeline | undefined> {
     return this.projects().pipe(mergeMap(projects => {
       const ids = projects.map(p => p.id);
 
@@ -44,11 +44,11 @@ export class CiService {
     }));
   }
 
-  pipeline(projectId: number): Observable<Pipeline | null> {
+  pipeline(projectId: number): Observable<Pipeline | undefined> {
     if (!this.pipelines$[projectId]) {
       this.pipelines$[projectId] =
         this.http.get<Pipeline[]>(`${this.API_GITLAB}/projects/${projectId}/pipelines`, {headers: this.HEADERS})
-            .pipe(map(pipelines => pipelines.length ? pipelines[0] : null), publishReplay(1), refCount());
+            .pipe(map(pipelines => pipelines.find(p => p.ref === 'master')), publishReplay(1), refCount());
     }
 
     return this.pipelines$[projectId];
