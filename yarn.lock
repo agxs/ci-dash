@@ -293,6 +293,11 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@fortawesome/fontawesome-free@^5.12.0":
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.12.0.tgz#8ceb9f09edfb85ea18a6c7bf098f6f5dd5ffd62b"
+  integrity sha512-vKDJUuE2GAdBERaQWmmtsciAMzjwNrROXA5KTGSZvayAsmuTGjam5z6QNqNPCwDfVljLWuov1nEC3mEQf/n6fQ==
+
 "@ngtools/webpack@8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-8.0.2.tgz#d60167b514b531ed6ae308b4911739dd102e41c7"

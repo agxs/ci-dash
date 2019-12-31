@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
       this.projects.sort((a, b) => a.name.localeCompare(b.name));
 
       projects.forEach(project => {
-        project.pipeline = this.ci.pipeline(project.id);
+        project.pipeline$ = this.ci.pipeline(project.id);
       })
     });
   }
