@@ -1,14 +1,15 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { concat, Observable } from "rxjs";
 import { Project, Pipeline } from "./gitlab";
-import { map, mergeMap, publishReplay, refCount } from "rxjs/operators";
+import { map, mergeMap, publishReplay, reduce, refCount } from "rxjs/operators";
 
 @Injectable()
 export class CiService {
   readonly API_TOKEN = 'sample_token';
   readonly API_GITLAB = 'https://gitlab.edina.ac.uk/api/v4';
-  readonly API_PROJECTS = this.API_GITLAB + '/groups/39/projects';
+  readonly API_PROJECTS = this.API_GITLAB + '/groups/:id/projects';
+  readonly API_PROJECT_IDS = [39, 70];
 
   readonly HEADERS = new HttpHeaders({ 'Private-Token': this.API_TOKEN });
 
@@ -22,8 +23,14 @@ export class CiService {
 
   projects(): Observable<Project[]> {
     if (!this.projects$) {
-      this.projects$ =
-        this.http.get<Project[]>(this.API_PROJECTS, {headers: this.HEADERS}).pipe(publishReplay(1), refCount());
+      const projects = this.API_PROJECT_IDS.map(id => {
+        const url = this.API_PROJECTS.replace(':id', id.toString());
+        return this.http.get<Project[]>(url, {headers: this.HEADERS})
+      });
+      this.projects$ = concat(...projects).pipe(reduce((a, v) => {
+        a.push(...v);
+        return a;
+      }, []), publishReplay(1), refCount());
     }
 
     return this.projects$;
