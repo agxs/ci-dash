@@ -13,7 +13,9 @@ export class AppComponent {
   constructor(private matDialog: MatDialog, private settingsService: SettingsService) {}
 
   onOpenSettings() {
-    this.matDialog.open(SettingsComponent).afterClosed().subscribe((s: Settings) => {
+    this.matDialog.open(SettingsComponent, {
+      width: '50vw',
+    }).afterClosed().subscribe((s: Settings) => {
       this.settingsService.onSettingsChange(s);
     });
   }
