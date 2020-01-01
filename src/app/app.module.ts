@@ -8,6 +8,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { ProjectComponent } from "./project.component";
 import { ProjectsComponent } from './projects.component';
 import { SettingsComponent } from './settings.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { SettingsComponent } from './settings.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    MatButtonModule,
   ],
   providers: [CiService],
   bootstrap: [AppComponent]
