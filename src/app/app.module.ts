@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 import { CiService } from "./ci.service";
 import { HttpClientModule } from "@angular/common/http";
 import { ProjectComponent } from "./project.component";
+import { ProjectsComponent } from './projects.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ProjectsComponent,
     ProjectComponent,
   ],
   imports: [
