@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CiService } from "./ci.service";
 import { Project } from "./gitlab";
+import { SettingsService } from './settings.service';
 
 @Component({
   selector: 'ci-projects',
@@ -12,9 +13,13 @@ export class ProjectsComponent implements OnInit {
 
   projects: Project[] = [];
 
-  constructor(private ci: CiService) {}
+  constructor(private ci: CiService, private settingsService: SettingsService) {}
 
   ngOnInit(): void {
+    this.settingsService.settings$.subscribe(() => this.updateProjects());
+  }
+
+  private updateProjects() {
     this.ci.projects().subscribe(projects => {
       this.projects = projects;
       this.projects.sort((a, b) => a.name.localeCompare(b.name));

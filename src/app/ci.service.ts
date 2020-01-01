@@ -1,53 +1,50 @@
-import { Injectable } from "@angular/core";
+import { Injectable, } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { concat, Observable } from "rxjs";
+import { concat, Observable, of } from "rxjs";
 import { Project, Pipeline, Commit } from "./gitlab";
-import { map, mergeMap, publishReplay, reduce, refCount } from "rxjs/operators";
+import { map, publishReplay, reduce, refCount } from "rxjs/operators";
+import { SettingsService } from './settings.service';
 
 @Injectable()
 export class CiService {
-  readonly API_TOKEN = 'sample_token';
-  readonly API_GITLAB = 'https://gitlab.edina.ac.uk/api/v4';
-  readonly API_PROJECTS = this.API_GITLAB + '/groups/:id/projects';
-  readonly API_PROJECT_IDS = [39, 70];
-
-  readonly HEADERS = new HttpHeaders({ 'Private-Token': this.API_TOKEN });
+  private readonly API_URL = '/api/v4';
+  private readonly API_PROJECTS_URL = '/groups/:id/projects';
+  private url = '';
+  private groupIds: number[] = [];
+  private tokenHeader = new HttpHeaders();
 
   // caches
-  private projects$: Observable<Project[]> | undefined = undefined;
   private pipelines$: {
     [id: number]: Observable<Pipeline | undefined>;
   } = {};
 
-  constructor(private http: HttpClient) {}
-
-  projects(): Observable<Project[]> {
-    if (!this.projects$) {
-      const projects = this.API_PROJECT_IDS.map(id => {
-        const url = this.API_PROJECTS.replace(':id', id.toString());
-        return this.http.get<Project[]>(url, {headers: this.HEADERS})
-      });
-      this.projects$ = concat(...projects).pipe(reduce<Project[]>((a, v) => {
-        a.push(...v);
-        return a;
-      }, []), publishReplay(1), refCount());
-    }
-
-    return this.projects$;
+  constructor(private http: HttpClient, settingsService: SettingsService) {
+    settingsService.settings$.subscribe(s => {
+      this.url = s.url + this.API_URL;
+      this.tokenHeader = this.tokenHeader.set('Private-Token', s.key);
+      this.groupIds = s.groupIds.split(',').map(g => parseInt(g, 10));
+    });
   }
 
-  pipelines(): Observable<Pipeline | undefined> {
-    return this.projects().pipe(mergeMap(projects => {
-      const ids = projects.map(p => p.id);
+  projects(): Observable<Project[]> {
+    if (!this.url || !this.groupIds.length || !this.tokenHeader.get('Private-Token')) {
+      return of([]);
+    }
 
-      return this.pipeline(ids[0]);
-    }));
+    const projects = this.groupIds.map(id => {
+      const url = this.url + this.API_PROJECTS_URL.replace(':id', id.toString());
+      return this.http.get<Project[]>(url, {headers: this.tokenHeader});
+    });
+    return concat(...projects).pipe(reduce<Project[]>((a, v) => {
+      a.push(...v);
+      return a;
+    }, []), publishReplay(1), refCount());
   }
 
   pipeline(projectId: number): Observable<Pipeline | undefined> {
     if (!this.pipelines$[projectId]) {
       this.pipelines$[projectId] =
-        this.http.get<Pipeline[]>(`${this.API_GITLAB}/projects/${projectId}/pipelines`, {headers: this.HEADERS})
+        this.http.get<Pipeline[]>(`${this.url}/projects/${projectId}/pipelines`, {headers: this.tokenHeader})
             .pipe(map(pipelines => pipelines.find(p => p.ref === 'master')), publishReplay(1), refCount());
     }
 
@@ -55,17 +52,7 @@ export class CiService {
   }
 
   commit(projectId: number, commit: string): Observable<Commit | undefined> {
-    return this.http.get<Commit>(`${this.API_GITLAB}/projects/${projectId}/repository/commits/${commit}`,
-      {headers: this.HEADERS});
+    return this.http.get<Commit>(`${this.url}/projects/${projectId}/repository/commits/${commit}`,
+      {headers: this.tokenHeader});
   }
-
-//  async projects() {
-//    const api = new Gitlab({
-//      host: 'https://gitlab.edina.ac.uk',
-//      token: 'sample_token'
-//    });
-//    const digimapGroup = await api.Groups.show(39);
-//    console.log(digimapGroup);
-//    return digimapGroup;
-//  }
 }

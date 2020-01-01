@@ -1,5 +1,13 @@
 <form>
-  <input name="url" value="https://gitlab.edina.ac.uk" placeholder="GitLab URL">
-  <input name="key" placeholder="key">
-  <input name="groupIds" placeholder="groupIds">
+  <mat-form-field>
+    <input matInput name="url" [(ngModel)]="gitlabUrl" placeholder="GitLab URL">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput name="key" [(ngModel)]="key" placeholder="key">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput name="groupIds" [(ngModel)]="groupIds" placeholder="groupIds">
+  </mat-form-field>
+
+  <button mat-raised-button color="accent" (click)="onClose()">Close</button>
 </form>
