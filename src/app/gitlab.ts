@@ -1,11 +1,15 @@
 import { Observable } from "rxjs";
 
+export interface CiModel {
+  project: Project;
+  pipeline$: Observable<Pipeline | undefined> | undefined;
+  commit$: Observable<Commit | undefined> | undefined;
+}
+
 export interface Project {
   id: number;
   name: string;
   description: string;
-  pipeline$: Observable<Pipeline | undefined>;
-  commit$: Observable<Commit | undefined>;
   name_with_namespace: string;
   path: string;
   path_with_namespace: string;

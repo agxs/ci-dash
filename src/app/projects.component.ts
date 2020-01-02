@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CiService } from "./ci.service";
-import { Project } from "./gitlab";
+import { CiModel } from "./gitlab";
 import { SettingsService } from './settings.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { SettingsService } from './settings.service';
 export class ProjectsComponent implements OnInit {
   title = 'ci-dash';
 
-  projects: Project[] = [];
+  ciModels: CiModel[] = [];
 
   constructor(private ci: CiService, private settingsService: SettingsService) {}
 
@@ -21,17 +21,17 @@ export class ProjectsComponent implements OnInit {
 
   private updateProjects() {
     this.ci.projects().subscribe(projects => {
-      this.projects = projects;
-      this.projects.sort((a, b) => a.name.localeCompare(b.name));
+      this.ciModels = projects.map(p => { return { project: p } as CiModel; });
+      this.ciModels.sort((a, b) => a.project.name.localeCompare(b.project.name));
 
-      projects.forEach(project => {
-        project.pipeline$ = this.ci.pipeline(project.id);
+      this.ciModels.forEach(ciModel => {
+        ciModel.pipeline$ = this.ci.pipeline(ciModel.project.id);
 
-        project.pipeline$.subscribe(p => {
+        ciModel.pipeline$.subscribe(p => {
           if (!p) {
             return;
           }
-          project.commit$ = this.ci.commit(project.id, p.sha);
+          ciModel.commit$ = this.ci.commit(ciModel.project.id, p.sha);
         });
       })
     });

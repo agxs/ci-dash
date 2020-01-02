@@ -1,9 +1,9 @@
-<ng-container *ngIf="project.pipeline$ | async as pipeline">
+<ng-container *ngIf="ciModel.pipeline$ | async as pipeline">
   <a class="project" [ngClass]="pipeline.status" [href]="pipeline.web_url" target="_ci">
     <header [innerHTML]="getProjectTitle()"></header>
     <main>
       <div><i class="fas fa-code-branch"></i> {{ pipeline.ref }} - {{ pipeline.sha.substr(0, 7) }}</div>
-      <div class="commit-msg">{{ (project.commit$ | async)?.title }}</div>
+      <div class="commit-msg">{{ (ciModel.commit$ | async)?.title }}</div>
     </main>
     <footer><span class="status">{{ pipeline.status }}</span></footer>
   </a>

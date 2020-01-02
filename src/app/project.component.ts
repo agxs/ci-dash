@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { Pipeline, Project } from "./gitlab";
+import { CiModel, Pipeline, Project } from "./gitlab";
 
 @Component({
   selector: 'ci-project',
@@ -7,12 +7,12 @@ import { Pipeline, Project } from "./gitlab";
   styleUrls: ['./project.component.scss'],
 })
 export class ProjectComponent {
-  @Input() project: Project | undefined;
+  @Input() ciModel: CiModel | undefined;
 
   getProjectTitle(): string {
-    if (!this.project) {
+    if (!this.ciModel) {
       return '';
     }
-    return this.project.name_with_namespace.replace(/(.*\/ )(.*)/, '$1<strong>$2</strong>');
+    return this.ciModel.project.name_with_namespace.replace(/(.*\/ )(.*)/, '$1<strong>$2</strong>');
   }
 }
