@@ -43,6 +43,24 @@ main {
   }
 }
 
+.pending {
+  display: flex !important;
+
+  .status {
+    border-color: #e48823;
+    color: #e48823;
+  }
+}
+
+.running {
+  display: flex !important;
+
+  .status {
+    border-color: #00a;
+    color: #00a;
+  }
+}
+
 .failed {
   display: flex !important;
 
