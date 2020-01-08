@@ -1,4 +1,4 @@
-<ng-container *ngIf="ciModel.pipeline$ | async as pipeline">
+<ng-container *ngIf="ciModel?.pipeline$ | async as pipeline">
   <a class="project" [ngClass]="pipeline.status" [href]="pipeline.web_url" target="_ci">
     <header [innerHTML]="getProjectTitle()"></header>
     <main>
