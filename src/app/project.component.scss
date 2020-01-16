@@ -53,6 +53,15 @@ main {
   }
 }
 
+.skipped {
+  display: flex !important;
+
+  .status {
+    border-color: #e48823;
+    color: #e48823;
+  }
+}
+
 .running {
   display: flex !important;
 
