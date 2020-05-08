@@ -8,7 +8,7 @@ import { SettingsService } from './settings.service';
 @Injectable()
 export class CiService {
   private readonly API_URL = '/api/v4';
-  private readonly API_PROJECTS_URL = '/groups/:id/projects';
+  private readonly API_PROJECTS_URL = '/groups/:id/projects?per_page=100';
   private url = '';
   private groupIds: number[] = [];
   private tokenHeader = new HttpHeaders();
